@@ -30,11 +30,17 @@ define(["Calculations"], function (Calculations) {
     Mover.prototype.right = function () {
         var tempX = this.position.x;
 
-        Calculations.add(this, function () {
-            this.position.x += (this.movementSpeed.x / 10);
-        }, function () {
-            return (this.position.x >= (tempX + this.movementSpeed.x));
-        });
+        Calculations.add(this, //CONTEXT
+            function () { //CALUCATE
+                this.position.x += (this.movementSpeed.x / 10);
+            },
+            function () { //HAVE CALCULATED
+                var a = this.position.x,
+                    b = tempX + this.movementSpeed.x;
+
+                return (a < b + 0.0001) && (a > b - 0.0001);
+            }
+        );
     };
 
     Mover.prototype.left = function () {
@@ -43,7 +49,10 @@ define(["Calculations"], function (Calculations) {
         Calculations.add(this, function () {
             this.position.x -= (this.movementSpeed.x / 10);
         }, function () {
-            return (this.position.x <= (tempX - this.movementSpeed.x));
+            var a = this.position.x,
+                b = tempX - this.movementSpeed.x;
+
+            return (a < b + 0.0001) && (a > b - 0.0001);
         });
     };
 
@@ -53,7 +62,10 @@ define(["Calculations"], function (Calculations) {
         Calculations.add(this, function () {
             this.position.y -= (this.movementSpeed.y / 10);
         }, function () {
-            return (this.position.y <= (tempY - this.movementSpeed.y));
+            var a = this.position.y,
+                b = tempY - this.movementSpeed.y;
+
+            return (a < b + 0.0001) && (a > b - 0.0001);
         });
     };
 
@@ -63,7 +75,10 @@ define(["Calculations"], function (Calculations) {
         Calculations.add(this, function () {
             this.position.y += (this.movementSpeed.y / 10);
         }, function () {
-            return (this.position.y >= (tempY + this.movementSpeed.y));
+            var a = this.position.y,
+                b = tempY + this.movementSpeed.y;
+
+            return (a < b + 0.0001) && (a > b - 0.0001);
         });
     };
 

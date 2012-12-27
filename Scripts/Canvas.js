@@ -46,7 +46,7 @@ define([], function () {
 
     Canvas.GRID_SETTINGS = {
         x: {
-            size: 10,
+            size: 20,
             width: function (canvas) {
                 var documentWidth = canvas.width;
 
