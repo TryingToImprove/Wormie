@@ -13,12 +13,20 @@ define([], function () {
         this.grid = createGrid();
     }
 
+    Canvas.prototype.addDrawing = function (objectToDraw, x, y) {
+        this.grid[y][x].drawings.push(objectToDraw);
+    };
+
     Canvas.prototype.draw = function () {
 
         //Lets us draw the grid;
         var row, col, cell, ctx = this.context,
             rowHeight = Canvas.GRID_SETTINGS.y.height(this.canvas),
-            colWidth = Canvas.GRID_SETTINGS.x.width(this.canvas);
+            colWidth = Canvas.GRID_SETTINGS.x.width(this.canvas),
+            drawing, objectToDraw;
+
+        //Clear
+        ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
         ctx.lineWidth = 1;
         ctx.strokeStyle = "black";
@@ -26,6 +34,11 @@ define([], function () {
         for (row = 0; row < this.grid.length; row += 1) {
             for (col = 0; col < this.grid[row].length; col += 1) {
                 ctx.strokeRect(col * colWidth, row * rowHeight, colWidth, rowHeight);
+
+                for (drawing = 0; drawing < this.grid[row][col].drawings.length; drawing += 1) {
+                    objectToDraw = this.grid[row][col].drawings[drawing];
+                    objectToDraw.draw.call(objectToDraw, ctx, rowHeight, colWidth);
+                }
             }
         }
 
@@ -35,18 +48,17 @@ define([], function () {
         x: {
             size: 10,
             width: function (canvas) {
-                var documentWidth = canvas.offsetWidth;
+                var documentWidth = canvas.width;
 
-
-                return Math.ceil(documentWidth / this.size);
+                return Math.floor(documentWidth / this.size);
             }
         },
         y: {
             size: 20,
             height: function (canvas) {
-                var documentHeight = canvas.offsetHeight;
+                var documentHeight = canvas.height;
 
-                return documentHeight / this.size;
+                return Math.floor(documentHeight / this.size);
             }
         }
     };
@@ -58,7 +70,9 @@ define([], function () {
             grid[row] = [];
 
             for (col = 0; col < Canvas.GRID_SETTINGS.x.size; col += 1) {
-                grid[row][col] = {};
+                grid[row][col] = {
+                    drawings: []
+                };
             }
         }
 

@@ -1,10 +1,10 @@
 define(["Worm"], function (Worm) {
     "use strict";
 
-    function User(name) {
+    function User(name, worm) {
         this.name = name;
 
-        this.worm = Worm.createStandard();
+        this.worm = (!worm) ? new Worm(200, 200) : new Worm(worm.position.x, worm.position.y);
     }
 
     User.prototype.save = function () {
@@ -12,7 +12,10 @@ define(["Worm"], function (Worm) {
     };
 
     User.loadFromLocalStorage = function () {
-        return JSON.parse(localStorage.getItem(User.DEFAULT_LOCALSTORAGE_NAME));
+        var parsed = JSON.parse(localStorage.getItem(User.DEFAULT_LOCALSTORAGE_NAME)),
+            user = new User(parsed.name, parsed.worm);
+
+        return user;
     };
 
     User.checkForUserInLocalStorage = function () {

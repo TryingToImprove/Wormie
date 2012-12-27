@@ -1,7 +1,7 @@
-define([], function () {
+define(["Calculations"], function (Calculations) {
     "use strict";
 
-    var Mover = function (position, movementSpeed){
+    var Mover = function (position, options) {
 
         if (arguments.length === 0) {
             throw new Error("Parameters are required");
@@ -19,26 +19,58 @@ define([], function () {
             throw new Error("position.y is not valid");
         }
 
-        if (!movementSpeed) {
-            throw new Error("movementSpeed is required");
-        }
-
-        if (typeof movementSpeed !== "number") {
-            throw new Error("movementSpeed must be a number");
-        }
-
         //Set parameters on object
         this.position = position;
-        this.movementSpeed = movementSpeed;
+        this.movementSpeed = {
+            x: options.xWidth,
+            y: options.yHeight
+        };
     };
 
     Mover.prototype.right = function () {
-        this.position.x += this.movementSpeed;
+        var tempX = this.position.x;
+
+        Calculations.add(this, function () {
+            this.position.x += (this.movementSpeed.x / 10);
+        }, function () {
+            return (this.position.x >= (tempX + this.movementSpeed.x));
+        });
     };
 
     Mover.prototype.left = function () {
-        this.position.x -= this.movementSpeed;
+        var tempX = this.position.x;
+
+        Calculations.add(this, function () {
+            this.position.x -= (this.movementSpeed.x / 10);
+        }, function () {
+            return (this.position.x <= (tempX - this.movementSpeed.x));
+        });
+    };
+
+    Mover.prototype.up = function () {
+        var tempY = this.position.y;
+
+        Calculations.add(this, function () {
+            this.position.y -= (this.movementSpeed.y / 10);
+        }, function () {
+            return (this.position.y <= (tempY - this.movementSpeed.y));
+        });
+    };
+
+    Mover.prototype.down = function () {
+        var tempY = this.position.y;
+
+        Calculations.add(this, function () {
+            this.position.y += (this.movementSpeed.y / 10);
+        }, function () {
+            return (this.position.y >= (tempY + this.movementSpeed.y));
+        });
+    };
+
+    Mover.prototype.moveTo = function (x, y) {
+        this.position.x = x;
+        this.position.y = y;
     };
 
     return Mover;
-})
+});

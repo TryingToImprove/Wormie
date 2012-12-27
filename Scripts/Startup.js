@@ -5,9 +5,9 @@ define(["App"], function (App) {
         basePath: "../Scripts"
     });
 
-    var canvas = document.getElementById("game-canvas"),
-        app = new App(canvas);
 
+    var canvas = document.getElementById("game-canvas"), app;
+
+    window.app = app = new App(canvas);
     app.start();
-
 });
