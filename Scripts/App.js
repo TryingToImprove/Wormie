@@ -21,9 +21,10 @@ define(["Canvas", "User"], function (Canvas, User) {
     }
 
     App.prototype.start = function () {
-        this.User = getUser();
-        console.log("Hi " + this.User.name);
-        console.log("app started");
+        this.user = getUser();
+
+        alert("Hi " + this.user.name);
+        alert("app started");
     };
 
     return App;
