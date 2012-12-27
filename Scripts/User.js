@@ -1,8 +1,10 @@
-define([], function () {
+define(["Worm"], function (Worm) {
     "use strict";
 
     function User(name) {
         this.name = name;
+
+        this.worm = Worm.createStandard();
     }
 
     User.prototype.save = function () {

@@ -17,7 +17,7 @@ define(["Canvas", "User"], function (Canvas, User) {
     }
 
     function App(canvas) {
-        this.canvas = new Canvas(canvas);
+        this.canvas = new Canvas(canvas, document.body.offsetWidth, (document.body.offsetHeight / 100) * 90.8);
     }
 
     App.prototype.start = function () {
@@ -25,6 +25,8 @@ define(["Canvas", "User"], function (Canvas, User) {
 
         alert("Hi " + this.user.name);
         alert("app started");
+
+        this.canvas.draw();
     };
 
     return App;
