@@ -41,24 +41,37 @@ define([], function () {
                 }
             }
         }
-
     };
 
     Canvas.GRID_SETTINGS = {
         x: {
-            size: 20,
+            size: 5,
+            cachedWidth: null,
             width: function (canvas) {
-                var documentWidth = canvas.width;
+                var documentWidth;
 
-                return Math.floor(documentWidth / this.size);
+                if (!this.cachedWidth) {
+                    documentWidth = canvas.width;
+
+                    this.cachedWidth =  Math.floor(documentWidth / this.size);
+                }
+
+                return this.cachedWidth;
             }
         },
         y: {
-            size: 20,
+            size: 5,
+            cachedHeight: null,
             height: function (canvas) {
-                var documentHeight = canvas.height;
+                var documentHeight;
 
-                return Math.floor(documentHeight / this.size);
+                if (!this.cachedHeight) {
+                    documentHeight = canvas.height;
+
+                    this.cachedHeight =  Math.floor(documentHeight / this.size);
+                }
+
+                return this.cachedHeight;
             }
         }
     };

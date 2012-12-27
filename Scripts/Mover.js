@@ -1,4 +1,4 @@
-define(["Calculations"], function (Calculations) {
+define(["Calculations", "Canvas"], function (Calculations, Canvas) {
     "use strict";
 
     var Mover = function (position, options) {
@@ -27,59 +27,76 @@ define(["Calculations"], function (Calculations) {
         };
     };
 
+    var assert = {
+        almostEqual: function (actual, expected) {
+            var precision;
+
+            if (!precision) { precision = 5; }
+
+            return Math.abs(actual - expected) < 0.5 * Math.pow(10, -precision);//(a < b + 0.0001) && (a > b - 0.0001);
+        }
+    };
+
     Mover.prototype.right = function () {
         var tempX = this.position.x;
 
-        Calculations.add(this, //CONTEXT
-            function () { //CALUCATE
-                this.position.x += (this.movementSpeed.x / 10);
-            },
-            function () { //HAVE CALCULATED
-                var a = this.position.x,
-                    b = tempX + this.movementSpeed.x;
+        if (!assert.almostEqual(tempX, (Canvas.GRID_SETTINGS.x.width() * (Canvas.GRID_SETTINGS.x.size - 1)))) {
+            Calculations.add(this, //CONTEXT
+                function () { //CALUCATE
+                    this.position.x += (this.movementSpeed.x / 10);
+                },
+                function () { //HAVE CALCULATED
+                    var a = this.position.x,
+                        b = tempX + this.movementSpeed.x;
 
-                return (a < b + 0.0001) && (a > b - 0.0001);
-            }
-        );
+                    return assert.almostEqual(a, b); //(a < b + 0.0001) && (a > b - 0.0001);
+                });
+        }
     };
 
     Mover.prototype.left = function () {
         var tempX = this.position.x;
 
-        Calculations.add(this, function () {
-            this.position.x -= (this.movementSpeed.x / 10);
-        }, function () {
-            var a = this.position.x,
-                b = tempX - this.movementSpeed.x;
+        if (!assert.almostEqual(tempX, 0)) {
+            Calculations.add(this, function () {
+                this.position.x -= (this.movementSpeed.x / 10);
+            }, function () {
+                var a = this.position.x,
+                    b = tempX - this.movementSpeed.x;
 
-            return (a < b + 0.0001) && (a > b - 0.0001);
-        });
+                return assert.almostEqual(a, b); //(a < b + 0.0001) && (a > b - 0.0001);
+            });
+        }
     };
 
     Mover.prototype.up = function () {
         var tempY = this.position.y;
 
-        Calculations.add(this, function () {
-            this.position.y -= (this.movementSpeed.y / 10);
-        }, function () {
-            var a = this.position.y,
-                b = tempY - this.movementSpeed.y;
+        if (!assert.almostEqual(tempY, 0)) {
+            Calculations.add(this, function () {
+                this.position.y -= (this.movementSpeed.y / 10);
+            }, function () {
+                var a = this.position.y,
+                    b = tempY - this.movementSpeed.y;
 
-            return (a < b + 0.0001) && (a > b - 0.0001);
-        });
+                return assert.almostEqual(a, b); //(a < b + 0.0001) && (a > b - 0.0001);
+            });
+        }
     };
 
     Mover.prototype.down = function () {
         var tempY = this.position.y;
 
-        Calculations.add(this, function () {
-            this.position.y += (this.movementSpeed.y / 10);
-        }, function () {
-            var a = this.position.y,
-                b = tempY + this.movementSpeed.y;
+        if (!assert.almostEqual(tempY, (Canvas.GRID_SETTINGS.y.height() * (Canvas.GRID_SETTINGS.y.size - 1)))) {
+                Calculations.add(this, function () {
+                this.position.y += (this.movementSpeed.y / 10);
+            }, function () {
+                var a = this.position.y,
+                    b = tempY + this.movementSpeed.y;
 
-            return (a < b + 0.0001) && (a > b - 0.0001);
-        });
+                return assert.almostEqual(a, b); //(a < b + 0.0001) && (a > b - 0.0001);
+            });
+        }
     };
 
     Mover.prototype.moveTo = function (x, y) {
