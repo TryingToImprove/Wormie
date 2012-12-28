@@ -1,4 +1,4 @@
-define(["Canvas", "User", "Calculations", "AssetManager"], function (Canvas, User, Calculations, AssetManager) {
+define(["Canvas", "User", "Calculations", "AssetManager", "Factories/UserFactory"], function (Canvas, User, Calculations, AssetManager, UserFactory) {
     "use strict";
 
     var getUser, drawing;
@@ -9,7 +9,15 @@ define(["Canvas", "User", "Calculations", "AssetManager"], function (Canvas, Use
     }
 
     App.prototype.start = function () {
-        this.user = getUser();
+        var user, name;
+
+        if (App.checkForUserInLocalStorage()) {
+            this.user =  App.loadFromLocalStorage().user;
+        } else {
+            name = window.prompt("Enter your name:");
+            this.user = new User(name);
+            this.save();
+        }
 
         this.resources.queueDownload("/Images/happy.png");
         this.resources.download(function (context) {
@@ -21,14 +29,41 @@ define(["Canvas", "User", "Calculations", "AssetManager"], function (Canvas, Use
     };
 
     App.prototype.finishLoading = function () {
-        this.canvas.addDrawing(this.user.worm, 0, 0);
-
         for (var i = 0; i < this.user.worms.length; i++){
             this.canvas.addDrawing(this.user.worms[i], 0, 0);
         }
 
         drawing(this);
     }
+
+    App.prototype.save = function () {
+        var data = {
+            lastSave: Date.now(),
+            user: UserFactory.stringify(this.user)
+        };
+
+        console.log(data);
+
+        localStorage.setItem(App.DEFAULT_LOCALSTORAGE_NAME, JSON.stringify(data));
+    };
+
+    App.loadFromLocalStorage = function () {
+        var data = JSON.parse(localStorage.getItem(App.DEFAULT_LOCALSTORAGE_NAME)),
+            user = UserFactory.create(data.user);
+
+        console.log(data);
+
+        return {
+            lastSave: data.lastSave,
+            user: user
+        };
+    };
+
+    App.checkForUserInLocalStorage = function () {
+        return !!localStorage.getItem(App.DEFAULT_LOCALSTORAGE_NAME);
+    };
+
+    App.DEFAULT_LOCALSTORAGE_NAME = "App";
 
     drawing = function (context) {
         webkitRequestAnimationFrame(function () {
@@ -41,21 +76,6 @@ define(["Canvas", "User", "Calculations", "AssetManager"], function (Canvas, Use
 
             drawing(context);
         });
-    }
-
-    getUser = function () {
-        var user, name;
-
-        if (User.checkForUserInLocalStorage()) {
-            user =  User.loadFromLocalStorage();
-        } else {
-            name = window.prompt("Enter your name:");
-            user = new User(name);
-
-            user.save();
-        }
-
-        return user;
     }
     return App;
 });

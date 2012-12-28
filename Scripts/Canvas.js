@@ -54,6 +54,7 @@ define([], function () {
         }
 
         this.updateDelta();
+        window.app.save();
     };
 
     Canvas.GRID_SETTINGS = {
