@@ -10,12 +10,18 @@ define(function () {
         var self = this;
         this.pending = [];
 
-        this.resolve = function (result) {
-            self.complete('resolve', result);
+        this.resolve = function () {
+            var args = Array.prototype.slice.call(arguments, 0);
+            args.splice(0, 0, 'resolve');
+
+            self.complete.apply(this, args);
         };
 
-        this.reject = function (result) {
-            self.complete('reject', result);
+        this.reject = function () {
+            var args = Array.prototype.slice.call(arguments, 0);
+            args.splice(0, 0, 'reject');
+
+            self.complete.apply(this, args);
         };
     }
 
@@ -25,9 +31,14 @@ define(function () {
             return this;
         },
 
-        complete: function (type, result) {
+        complete: function () {
+            var args = Array.prototype.slice.call(arguments, 0),
+                type = args[0];
+
+            args.splice(0, 1);
+
             while (this.pending[0]) {
-                this.pending.shift()[type](result);
+                this.pending.shift()[type].apply(this, args);
             }
         }
     };

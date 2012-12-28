@@ -13,7 +13,7 @@ define(["Utilities/Promise"], function (Promise) {
     }
 
     AssetManager.prototype.getFile = function (path) {
-        var promise = new Promise(), image, length, file, i, completed = 0, that = this;
+        var promise = new Promise(), image, length, file, i, completed = 0, that = this, results = [];
 
         function loadComplete(path, image) {
             return function (e) {
@@ -21,11 +21,13 @@ define(["Utilities/Promise"], function (Promise) {
                     that.cache[path] = image;
                 }
 
+                results.push(that.cache[path]);
+
                 completed += 1;
 
                 console.log(completed, length, length === completed);
                 if (length === completed) {
-                    promise.resolve(image);
+                    promise.resolve.apply(promise, results);
                 }
             }
         }
