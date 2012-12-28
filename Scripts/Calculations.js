@@ -26,8 +26,13 @@ define([], function () {
         this.items = [];
     }
 
-    Calculations.prototype.add = function (context, actionFunc, deleteWhenFunc, finishFunc) {
-        this.items.push(new Calculation(context, actionFunc, deleteWhenFunc, finishFunc));
+    Calculations.prototype.add = function (context, options) {
+
+        var calculate = options.calculate,
+            doneWhen = options.doneWhen,
+            finishCallback = options.finish;
+
+        this.items.push(new Calculation(context, calculate, doneWhen, finishCallback));
     };
 
     Calculations.prototype.perform = function () {

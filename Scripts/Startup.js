@@ -2,7 +2,8 @@ define(["App"], function (App) {
     "use strict";
 
     require.config({
-        basePath: "../Scripts"
+        basePath: "../Scripts",
+        deps: ["Assert"]
     });
 
 

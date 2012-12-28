@@ -1,4 +1,4 @@
-define(["Calculations", "Canvas"], function (Calculations, Canvas) {
+define(["Calculations", "Canvas", "Assert"], function (Calculations, Canvas, Assert) {
     "use strict";
 
     var Mover = function (position, options) {
@@ -27,31 +27,23 @@ define(["Calculations", "Canvas"], function (Calculations, Canvas) {
         };
     };
 
-    var assert = {
-        almostEqual: function (actual, expected) {
-            var precision;
-
-            if (!precision) { precision = 5; }
-
-            return Math.abs(actual - expected) < 0.5 * Math.pow(10, -precision);//(a < b + 0.0001) && (a > b - 0.0001);
-        }
-    };
-
     Mover.prototype.right = function (options) {
         var tempX = this.position.x,
-            finishCallback = (options && options.finishFunc) ? options.finishFunc : null;
+            finishCallback = (options && options.finish) ? options.finish : null;
 
-        if (!assert.almostEqual(tempX, (Canvas.GRID_SETTINGS.x.width() * (Canvas.GRID_SETTINGS.x.size - 1)))) {
-            Calculations.add(this, //CONTEXT
-                function () { //CALUCATE
+        if (!Assert.almostEqual(tempX, (Canvas.GRID_SETTINGS.x.width() * (Canvas.GRID_SETTINGS.x.size - 1)))) {
+            Calculations.add(this, {
+                calculate: function () {
                     this.position.x += (this.movementSpeed.x / 10);
                 },
-                function () { //HAVE CALCULATED
+                doneWhen: function () {
                     var a = this.position.x,
                         b = tempX + this.movementSpeed.x;
 
-                    return assert.almostEqual(a, b); //(a < b + 0.0001) && (a > b - 0.0001);
-                }, finishCallback);
+                    return Assert.almostEqual(a, b); //(a < b + 0.0001) && (a > b - 0.0001);
+                },
+                finish: finishCallback
+            });
         } else {
             if (finishCallback) {
                 finishCallback();
@@ -61,17 +53,23 @@ define(["Calculations", "Canvas"], function (Calculations, Canvas) {
 
     Mover.prototype.left = function (options) {
         var tempX = this.position.x,
-            finishCallback = (options && options.finishFunc) ? options.finishFunc : null;
+            finishCallback = (options && options.finish) ? options.finish : null;
 
-        if (!assert.almostEqual(tempX, 0)) {
-            Calculations.add(this, function () {
-                this.position.x -= (this.movementSpeed.x / 10);
-            }, function () {
-                var a = this.position.x,
-                    b = tempX - this.movementSpeed.x;
+        if (!Assert.almostEqual(tempX, 0)) {
 
-                return assert.almostEqual(a, b); //(a < b + 0.0001) && (a > b - 0.0001);
-            }, finishCallback);
+            Calculations.add(this, {
+                calculate: function () {
+                    this.position.x -= (this.movementSpeed.x / 10);
+                },
+                doneWhen: function () {
+                    var a = this.position.x,
+                        b = tempX - this.movementSpeed.x;
+
+                    return Assert.almostEqual(a, b);
+                },
+                finish: finishCallback
+            });
+
         } else {
             if (finishCallback) {
                 finishCallback();
@@ -81,17 +79,23 @@ define(["Calculations", "Canvas"], function (Calculations, Canvas) {
 
     Mover.prototype.up = function (options) {
         var tempY = this.position.y,
-            finishCallback = (options && options.finishFunc) ? options.finishFunc : null;
+            finishCallback = (options && options.finish) ? options.finish : null;
 
-        if (!assert.almostEqual(tempY, 0)) {
-            Calculations.add(this, function () {
-                this.position.y -= (this.movementSpeed.y / 10);
-            }, function () {
-                var a = this.position.y,
-                    b = tempY - this.movementSpeed.y;
+        if (!Assert.almostEqual(tempY, 0)) {
 
-                return assert.almostEqual(a, b); //(a < b + 0.0001) && (a > b - 0.0001);
-            }, finishCallback);
+            Calculations.add(this, {
+                calculate: function () {
+                    this.position.y -= (this.movementSpeed.y / 10);
+                },
+                doneWhen: function () {
+                    var a = this.position.y,
+                        b = tempY - this.movementSpeed.y;
+
+                    return Assert.almostEqual(a, b); //(a < b + 0.0001) && (a > b - 0.0001);
+                },
+                finish: finishCallback
+            });
+
         } else {
             if (finishCallback) {
                 finishCallback();
@@ -101,17 +105,21 @@ define(["Calculations", "Canvas"], function (Calculations, Canvas) {
 
     Mover.prototype.down = function (options) {
         var tempY = this.position.y,
-            finishCallback = (options && options.finishFunc) ? options.finishFunc : null;
+            finishCallback = (options && options.finish) ? options.finish : null;
 
-        if (!assert.almostEqual(tempY, (Canvas.GRID_SETTINGS.y.height() * (Canvas.GRID_SETTINGS.y.size - 1)))) {
-                Calculations.add(this, function () {
-                this.position.y += (this.movementSpeed.y / 10);
-            }, function () {
-                var a = this.position.y,
-                    b = tempY + this.movementSpeed.y;
+        if (!Assert.almostEqual(tempY, (Canvas.GRID_SETTINGS.y.height() * (Canvas.GRID_SETTINGS.y.size - 1)))) {
+            Calculations.add(this, {
+                calculate: function () {
+                    this.position.y += (this.movementSpeed.y / 10);
+                },
+                doneWhen: function () {
+                    var a = this.position.y,
+                        b = tempY + this.movementSpeed.y;
 
-                return assert.almostEqual(a, b); //(a < b + 0.0001) && (a > b - 0.0001);
-                }, finishCallback);
+                    return Assert.almostEqual(a, b); //(a < b + 0.0001) && (a > b - 0.0001);
+                },
+                finish: finishCallback
+            });
         } else {
             if (finishCallback) {
                 finishCallback();

@@ -20,29 +20,27 @@ define(["Mover", "App", "Canvas"], function (Mover, App, Canvas) {
         function doSomething(context) {
             var randomNum = Math.floor(Math.random() * 3),
                 finishCallback = function () {
-                    setTimeout(function () {
                         doSomething(context);
-                    }, 100);
                 },
                 actions = {
                     0: function (mover) {
                         mover.left({
-                            finishFunc: finishCallback
+                            finish: finishCallback
                         });
                     },
                     1: function (mover) {
                         mover.right({
-                            finishFunc: finishCallback
+                            finish: finishCallback
                         });
                     },
                     2: function (mover) {
                         mover.down({
-                            finishFunc: finishCallback
+                            finish: finishCallback
                         });
                     },
                     3: function (mover) {
                         mover.up({
-                            finishFunc: finishCallback
+                            finish: finishCallback
                         });
                     }
                 };
