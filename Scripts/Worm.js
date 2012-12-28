@@ -8,6 +8,8 @@ define(["Mover", "App", "Canvas"], function (Mover, App, Canvas) {
             y: y
         };
 
+        console.log(this.position.x, this.position.y)
+
         this.mover = new Mover(this.position, {
             yHeight: Canvas.GRID_SETTINGS.y.height(window.app.canvas.canvas),
             xWidth: Canvas.GRID_SETTINGS.x.width(window.app.canvas.canvas)
@@ -51,8 +53,7 @@ define(["Mover", "App", "Canvas"], function (Mover, App, Canvas) {
     }
 
     Worm.prototype.draw = function (ctx, rowHeight, colWidth) {
-        ctx.fillStyle = "green";
-        ctx.fillRect(this.position.x, this.position.y, colWidth, rowHeight);
+        ctx.drawImage(window.app.resources.files["/Images/happy.png"], this.position.x, this.position.y, colWidth, rowHeight);
     };
 
   /*  Worm.createStandard = function () {

@@ -22,7 +22,7 @@ define(["Calculations", "Canvas", "Assert"], function (Calculations, Canvas, Ass
         //Set parameters on object
         this.position = position;
         this.settings = {
-            movementSpeed: 100
+            movementSpeed: 30
         };
 
         this.movementSpeed = {

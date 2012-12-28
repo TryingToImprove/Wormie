@@ -12,6 +12,9 @@ define([], function () {
 
         this.grid = createGrid();
 
+        var rowHeight = Canvas.GRID_SETTINGS.y.height(this.canvas),
+            colWidth = Canvas.GRID_SETTINGS.x.width(this.canvas);
+
         this.updateDelta();
     }
 
@@ -41,7 +44,7 @@ define([], function () {
 
         for (row = 0; row < this.grid.length; row += 1) {
             for (col = 0; col < this.grid[row].length; col += 1) {
-                ctx.strokeRect(col * colWidth, row * rowHeight, colWidth, rowHeight);
+                //ctx.strokeRect(col * colWidth, row * rowHeight, colWidth, rowHeight);
 
                 for (drawing = 0; drawing < this.grid[row][col].drawings.length; drawing += 1) {
                     objectToDraw = this.grid[row][col].drawings[drawing];
