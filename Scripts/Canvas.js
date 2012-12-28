@@ -45,7 +45,7 @@ define([], function () {
 
     Canvas.GRID_SETTINGS = {
         x: {
-            size: 5,
+            size: 25,
             cachedWidth: null,
             width: function (canvas) {
                 var documentWidth;
@@ -60,7 +60,7 @@ define([], function () {
             }
         },
         y: {
-            size: 5,
+            size: 30,
             cachedHeight: null,
             height: function (canvas) {
                 var documentHeight;

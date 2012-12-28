@@ -37,8 +37,9 @@ define(["Calculations", "Canvas"], function (Calculations, Canvas) {
         }
     };
 
-    Mover.prototype.right = function () {
-        var tempX = this.position.x;
+    Mover.prototype.right = function (options) {
+        var tempX = this.position.x,
+            finishCallback = (options && options.finishFunc) ? options.finishFunc : null;
 
         if (!assert.almostEqual(tempX, (Canvas.GRID_SETTINGS.x.width() * (Canvas.GRID_SETTINGS.x.size - 1)))) {
             Calculations.add(this, //CONTEXT
@@ -50,12 +51,17 @@ define(["Calculations", "Canvas"], function (Calculations, Canvas) {
                         b = tempX + this.movementSpeed.x;
 
                     return assert.almostEqual(a, b); //(a < b + 0.0001) && (a > b - 0.0001);
-                });
+                }, finishCallback);
+        } else {
+            if (finishCallback) {
+                finishCallback();
+            }
         }
     };
 
-    Mover.prototype.left = function () {
-        var tempX = this.position.x;
+    Mover.prototype.left = function (options) {
+        var tempX = this.position.x,
+            finishCallback = (options && options.finishFunc) ? options.finishFunc : null;
 
         if (!assert.almostEqual(tempX, 0)) {
             Calculations.add(this, function () {
@@ -65,12 +71,17 @@ define(["Calculations", "Canvas"], function (Calculations, Canvas) {
                     b = tempX - this.movementSpeed.x;
 
                 return assert.almostEqual(a, b); //(a < b + 0.0001) && (a > b - 0.0001);
-            });
+            }, finishCallback);
+        } else {
+            if (finishCallback) {
+                finishCallback();
+            }
         }
     };
 
-    Mover.prototype.up = function () {
-        var tempY = this.position.y;
+    Mover.prototype.up = function (options) {
+        var tempY = this.position.y,
+            finishCallback = (options && options.finishFunc) ? options.finishFunc : null;
 
         if (!assert.almostEqual(tempY, 0)) {
             Calculations.add(this, function () {
@@ -80,12 +91,17 @@ define(["Calculations", "Canvas"], function (Calculations, Canvas) {
                     b = tempY - this.movementSpeed.y;
 
                 return assert.almostEqual(a, b); //(a < b + 0.0001) && (a > b - 0.0001);
-            });
+            }, finishCallback);
+        } else {
+            if (finishCallback) {
+                finishCallback();
+            }
         }
     };
 
-    Mover.prototype.down = function () {
-        var tempY = this.position.y;
+    Mover.prototype.down = function (options) {
+        var tempY = this.position.y,
+            finishCallback = (options && options.finishFunc) ? options.finishFunc : null;
 
         if (!assert.almostEqual(tempY, (Canvas.GRID_SETTINGS.y.height() * (Canvas.GRID_SETTINGS.y.size - 1)))) {
                 Calculations.add(this, function () {
@@ -95,7 +111,11 @@ define(["Calculations", "Canvas"], function (Calculations, Canvas) {
                     b = tempY + this.movementSpeed.y;
 
                 return assert.almostEqual(a, b); //(a < b + 0.0001) && (a > b - 0.0001);
-            });
+                }, finishCallback);
+        } else {
+            if (finishCallback) {
+                finishCallback();
+            }
         }
     };
 

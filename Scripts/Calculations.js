@@ -1,14 +1,21 @@
 define([], function () {
     "use strict";
 
-    function Calculation(context, actionFunc, deleteWhenFunc) {
+    function Calculation(context, actionFunc, deleteWhenFunc, finishFunc) {
         this.context = context;
         this.actionFunc = actionFunc;
         this.deleteWhenFunc = deleteWhenFunc;
+        this.finishFunc = finishFunc;
     }
 
     Calculation.prototype.calculate = function () {
         this.actionFunc.call(this.context);
+    };
+
+    Calculation.prototype.finish = function () {
+        if (this.finishFunc) {
+            this.finishFunc.call(this.context);
+        }
     };
 
     Calculation.prototype.readyToBeDeleted = function () {
@@ -19,8 +26,8 @@ define([], function () {
         this.items = [];
     }
 
-    Calculations.prototype.add = function (context, actionFunc, deleteWhenFunc) {
-        this.items.push(new Calculation(context, actionFunc, deleteWhenFunc));
+    Calculations.prototype.add = function (context, actionFunc, deleteWhenFunc, finishFunc) {
+        this.items.push(new Calculation(context, actionFunc, deleteWhenFunc, finishFunc));
     };
 
     Calculations.prototype.perform = function () {
@@ -32,6 +39,7 @@ define([], function () {
             calculation.calculate();
 
             if (calculation.readyToBeDeleted()) {
+                calculation.finish();
                 this.items.splice(i, 1);
             }
         }

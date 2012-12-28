@@ -19,26 +19,35 @@ define(["Mover", "App", "Canvas"], function (Mover, App, Canvas) {
     Worm.prototype.live = function () {
         function doSomething(context) {
             var randomNum = Math.floor(Math.random() * 3),
+                finishCallback = function () {
+                    setTimeout(function () {
+                        doSomething(context);
+                    }, 100);
+                },
                 actions = {
                     0: function (mover) {
-                        mover.left();
+                        mover.left({
+                            finishFunc: finishCallback
+                        });
                     },
                     1: function (mover) {
-                        mover.right();
+                        mover.right({
+                            finishFunc: finishCallback
+                        });
                     },
                     2: function (mover) {
-                        mover.down();
+                        mover.down({
+                            finishFunc: finishCallback
+                        });
                     },
                     3: function (mover) {
-                        mover.up();
+                        mover.up({
+                            finishFunc: finishCallback
+                        });
                     }
                 };
 
             actions[randomNum](context.mover);
-
-            setTimeout(function () {
-                doSomething(context);
-            }, 500);
         }
 
         doSomething(this);
