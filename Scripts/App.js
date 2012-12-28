@@ -1,5 +1,5 @@
 define(
-    ["Canvas", "User", "Calculations", "AssetManager", "Factories/UserFactory", "AppSettings"],
+    ["Canvas", "User", "Calculations", "Managers/AssetManager", "Factories/UserFactory", "AppSettings", "Drawing/Graphics/WormGraphic"],
     function (Canvas, User, Calculations, AssetManager, UserFactory) {
         "use strict";
 
