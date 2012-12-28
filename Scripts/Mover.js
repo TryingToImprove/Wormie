@@ -22,7 +22,7 @@ define(["Calculations", "Canvas", "Assert"], function (Calculations, Canvas, Ass
         //Set parameters on object
         this.position = position;
         this.settings = {
-            movementSpeed: 30
+            movementSpeed: 80
         };
 
         this.movementSpeed = {
@@ -45,14 +45,18 @@ define(["Calculations", "Canvas", "Assert"], function (Calculations, Canvas, Ass
                 },
                 doneWhen: function () {
                     var a = Math.floor(this.position.x),
-                        b = Math.floor(tempX + this.movementSpeed.x);
+                        b = Math.floor(tempX + this.movementSpeed.x),
+                        valid = a === b;
 
                     if (a > b) {
+                        valid = true;
                         this.position.x = b;
                         a = b;
+                    } else if (valid) {
+                        this.position.x = Math.floor(this.position.x);
                     }
 
-                    return a === b; //(a < b + 0.0001) && (a > b - 0.0001);
+                    return valid;
                 },
                 finish: finishCallback
             });
@@ -77,14 +81,18 @@ define(["Calculations", "Canvas", "Assert"], function (Calculations, Canvas, Ass
                 },
                 doneWhen: function () {
                     var a = Math.floor(this.position.x),
-                        b = Math.floor(tempX - this.movementSpeed.x);
+                        b = Math.floor(tempX - this.movementSpeed.x),
+                        valid = a === b;
 
                     if (a < b) {
+                        valid = true;
                         this.position.x = b;
                         a = b;
+                    } else if (valid) {
+                        this.position.x = Math.floor(this.position.x);
                     }
 
-                    return a === b; //(a < b + 0.0001) && (a > b - 0.0001);                    return Assert.almostEqual(a, b);
+                    return valid;
                 },
                 finish: finishCallback
             });
@@ -110,14 +118,18 @@ define(["Calculations", "Canvas", "Assert"], function (Calculations, Canvas, Ass
                 },
                 doneWhen: function () {
                     var a = Math.floor(this.position.y),
-                        b = Math.floor(tempY - this.movementSpeed.y);
+                        b = Math.floor(tempY - this.movementSpeed.y),
+                        valid = a === b;
 
                     if (a < b) {
+                        valid = true;
                         this.position.y = b;
                         a = b;
+                    } else if (valid) {
+                        this.position.y = Math.floor(this.position.y);
                     }
 
-                    return a === b; //(a < b + 0.0001) && (a > b - 0.0001);                    return Assert.almostEqual(a, b); //(a < b + 0.0001) && (a > b - 0.0001);
+                    return valid;
                 },
                 finish: finishCallback
             });
@@ -142,14 +154,18 @@ define(["Calculations", "Canvas", "Assert"], function (Calculations, Canvas, Ass
                 },
                 doneWhen: function () {
                     var a = Math.floor(this.position.y),
-                        b = Math.floor(tempY + this.movementSpeed.y);
+                        b = Math.floor(tempY + this.movementSpeed.y),
+                        valid = a === b;
 
                     if (a > b) {
+                        valid = true;
                         this.position.y = b;
                         a = b;
+                    } else if (valid) {
+                        this.position.y = Math.floor(this.position.y);
                     }
 
-                    return a === b; //(a < b + 0.0001) && (a > b - 0.0001);                    return Assert.almostEqual(a, b); //(a < b + 0.0001) && (a > b - 0.0001);
+                    return valid;
                 },
                 finish: finishCallback
             });

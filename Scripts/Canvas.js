@@ -1,19 +1,25 @@
-define([], function () {
+define(["AppSettings"], function (AppSettings) {
     "use strict";
 
     var createGrid;
 
-    function Canvas(canvas, width, height) {
+    function Canvas(canvas, app) {
         this.canvas = canvas;
-        this.canvas.width = width;
-        this.canvas.height = height;
+        this.app = app;
+
+       //WebGL2D.enable(this.canvas); // adds "webgl-2d" context to cvs
 
         this.context = this.canvas.getContext("2d");
 
         this.grid = createGrid();
 
-        var rowHeight = Canvas.GRID_SETTINGS.y.height(this.canvas),
-            colWidth = Canvas.GRID_SETTINGS.x.width(this.canvas);
+        AppSettings.vent.subscribe(AppSettings.CANVAS.dimensionChanged, function (data) {
+            this.canvas.width = data.CANVAS_WIDTH;
+            this.canvas.height = data.CANVAS_HEIGHT;
+
+            Canvas.GRID_SETTINGS.x = data.xAxis;
+            Canvas.GRID_SETTINGS.y = data.yAxis;
+        }, { context: this });
 
         this.updateDelta();
     }
@@ -44,7 +50,7 @@ define([], function () {
 
         for (row = 0; row < this.grid.length; row += 1) {
             for (col = 0; col < this.grid[row].length; col += 1) {
-                //ctx.strokeRect(col * colWidth, row * rowHeight, colWidth, rowHeight);
+                ctx.strokeRect(col * colWidth, row * rowHeight, colWidth, rowHeight);
 
                 for (drawing = 0; drawing < this.grid[row][col].drawings.length; drawing += 1) {
                     objectToDraw = this.grid[row][col].drawings[drawing];
@@ -54,12 +60,12 @@ define([], function () {
         }
 
         this.updateDelta();
-        window.app.save();
+        //window.app.save();
     };
 
     Canvas.GRID_SETTINGS = {
         x: {
-            size: 25,
+            size: 15,
             //ize: 50,
             cachedWidth: null,
             width: function (canvas) {
@@ -75,7 +81,7 @@ define([], function () {
             }
         },
         y: {
-            size: 30,
+            size: 20,
             //size: 50,
             cachedHeight: null,
             height: function (canvas) {

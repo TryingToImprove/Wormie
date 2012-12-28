@@ -10,13 +10,7 @@ define(["User", "Factories/WormsFactory"], function (User, WormsFactory) {
 
         user = new User(userData.name);
 
-        var worms = [];
-        for (var i = 0; i < user.worms.length; i+= 1) {
-            worms.push(WormsFactory.create(user.worms[i]));
-        }
-        console.log(worms);
-
-        userData.worms = worms;
+        user.setWorms(WormsFactory.createMultiple(userData.worms));
 
         return user;
     };
@@ -28,7 +22,7 @@ define(["User", "Factories/WormsFactory"], function (User, WormsFactory) {
         };
 
         userData.name = user.name;
-        userData.worms = user.worms;
+        userData.worms = user.getWorms();
 
         return userData;
     }

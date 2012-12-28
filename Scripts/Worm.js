@@ -8,6 +8,11 @@ define(["Mover", "App", "Canvas"], function (Mover, App, Canvas) {
             y: y
         };
 
+        this.lastPosition = {
+            x: x,
+            y: y
+        };
+
         this.mover = new Mover(this.position, {
             yHeight: Canvas.GRID_SETTINGS.y.height(window.app.canvas.canvas),
             xWidth: Canvas.GRID_SETTINGS.x.width(window.app.canvas.canvas)
@@ -44,6 +49,11 @@ define(["Mover", "App", "Canvas"], function (Mover, App, Canvas) {
                         });
                     }
                 };
+
+            if (context.position.x < 0 || context.position.y < 0) {
+                throw new Error("OUT OF SPACE");
+            }
+
             context.lastPosition = context.position;
             actions[randomNum - 1](context.mover);
         }
