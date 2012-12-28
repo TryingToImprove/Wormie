@@ -11,10 +11,18 @@ define([], function () {
         this.context = this.canvas.getContext("2d");
 
         this.grid = createGrid();
+
+        this.updateDelta();
     }
 
     Canvas.prototype.addDrawing = function (objectToDraw, x, y) {
         this.grid[y][x].drawings.push(objectToDraw);
+    };
+
+    Canvas.prototype.updateDelta = function () {
+        var now = Date.now();
+        this.delta = (now - (this.lastTime)) / 1000;
+        this.lastTime = now;
     };
 
     Canvas.prototype.draw = function () {
@@ -41,11 +49,14 @@ define([], function () {
                 }
             }
         }
+
+        this.updateDelta();
     };
 
     Canvas.GRID_SETTINGS = {
         x: {
             size: 25,
+            //ize: 50,
             cachedWidth: null,
             width: function (canvas) {
                 var documentWidth;
@@ -61,6 +72,7 @@ define([], function () {
         },
         y: {
             size: 30,
+            //size: 50,
             cachedHeight: null,
             height: function (canvas) {
                 var documentHeight;

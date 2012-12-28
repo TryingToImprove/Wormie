@@ -18,9 +18,9 @@ define(["Mover", "App", "Canvas"], function (Mover, App, Canvas) {
 
     Worm.prototype.live = function () {
         function doSomething(context) {
-            var randomNum = Math.floor(Math.random() * 3),
+            var randomNum = Math.ceil(Math.random() * 4),
                 finishCallback = function () {
-                        doSomething(context);
+                    doSomething(context);
                 },
                 actions = {
                     0: function (mover) {
@@ -44,8 +44,7 @@ define(["Mover", "App", "Canvas"], function (Mover, App, Canvas) {
                         });
                     }
                 };
-
-            actions[randomNum](context.mover);
+            actions[randomNum-1](context.mover);
         }
 
         doSomething(this);

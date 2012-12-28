@@ -4,7 +4,7 @@ define(["Worm"], function (Worm) {
     function User(name, worm) {
         this.name = name;
 
-        this.worm = (!worm) ? new Worm(200, 200) : new Worm(worm.position.x, worm.position.y);
+        this.worm = (!worm) ? new Worm(0, 0) : new Worm(worm.position.x, worm.position.y);
     }
 
     User.prototype.save = function () {

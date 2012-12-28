@@ -21,6 +21,10 @@ define(["Calculations", "Canvas", "Assert"], function (Calculations, Canvas, Ass
 
         //Set parameters on object
         this.position = position;
+        this.settings = {
+            movementSpeed: 100
+        };
+
         this.movementSpeed = {
             x: options.xWidth,
             y: options.yHeight
@@ -29,18 +33,26 @@ define(["Calculations", "Canvas", "Assert"], function (Calculations, Canvas, Ass
 
     Mover.prototype.right = function (options) {
         var tempX = this.position.x,
-            finishCallback = (options && options.finish) ? options.finish : null;
+            finishCallback = (options && options.finish) ? options.finish : null,
+            movementSpeed = Math.ceil(this.settings.movementSpeed);
 
-        if (!Assert.almostEqual(tempX, (Canvas.GRID_SETTINGS.x.width() * (Canvas.GRID_SETTINGS.x.size - 1)))) {
+        //if (!Assert.isLarger(tempX, (Canvas.GRID_SETTINGS.x.width() * (Canvas.GRID_SETTINGS.x.size - 1)))) {
+        if (Math.floor(tempX + this.movementSpeed.x) <= (Canvas.GRID_SETTINGS.x.width() * (Canvas.GRID_SETTINGS.x.size - 1))) {
             Calculations.add(this, {
                 calculate: function () {
-                    this.position.x += (this.movementSpeed.x / 10);
+                    var distance = movementSpeed * (window.app.canvas.delta || 1);
+                    this.position.x += distance;
                 },
                 doneWhen: function () {
-                    var a = this.position.x,
-                        b = tempX + this.movementSpeed.x;
+                    var a = Math.floor(this.position.x),
+                        b = Math.floor(tempX + this.movementSpeed.x);
 
-                    return Assert.almostEqual(a, b); //(a < b + 0.0001) && (a > b - 0.0001);
+                    if (a > b) {
+                        this.position.x = b;
+                        a = b;
+                    }
+
+                    return a === b; //(a < b + 0.0001) && (a > b - 0.0001);
                 },
                 finish: finishCallback
             });
@@ -53,19 +65,26 @@ define(["Calculations", "Canvas", "Assert"], function (Calculations, Canvas, Ass
 
     Mover.prototype.left = function (options) {
         var tempX = this.position.x,
-            finishCallback = (options && options.finish) ? options.finish : null;
+            finishCallback = (options && options.finish) ? options.finish : null,
+            movementSpeed = Math.ceil(this.settings.movementSpeed);
 
-        if (!Assert.almostEqual(tempX, 0)) {
+        if (Math.floor(tempX - this.movementSpeed.x) >= -1) {
 
             Calculations.add(this, {
                 calculate: function () {
-                    this.position.x -= (this.movementSpeed.x / 10);
+                    var distance = movementSpeed * (window.app.canvas.delta || 1);
+                    this.position.x -= distance;
                 },
                 doneWhen: function () {
-                    var a = this.position.x,
-                        b = tempX - this.movementSpeed.x;
+                    var a = Math.floor(this.position.x),
+                        b = Math.floor(tempX - this.movementSpeed.x);
 
-                    return Assert.almostEqual(a, b);
+                    if (a < b) {
+                        this.position.x = b;
+                        a = b;
+                    }
+
+                    return a === b; //(a < b + 0.0001) && (a > b - 0.0001);                    return Assert.almostEqual(a, b);
                 },
                 finish: finishCallback
             });
@@ -79,19 +98,26 @@ define(["Calculations", "Canvas", "Assert"], function (Calculations, Canvas, Ass
 
     Mover.prototype.up = function (options) {
         var tempY = this.position.y,
-            finishCallback = (options && options.finish) ? options.finish : null;
+            finishCallback = (options && options.finish) ? options.finish : null,
+            movementSpeed = Math.ceil(this.settings.movementSpeed);
 
         if (!Assert.almostEqual(tempY, 0)) {
 
             Calculations.add(this, {
                 calculate: function () {
-                    this.position.y -= (this.movementSpeed.y / 10);
+                    var distance = movementSpeed * (window.app.canvas.delta || 1);
+                    this.position.y -= distance;
                 },
                 doneWhen: function () {
-                    var a = this.position.y,
-                        b = tempY - this.movementSpeed.y;
+                    var a = Math.floor(this.position.y),
+                        b = Math.floor(tempY - this.movementSpeed.y);
 
-                    return Assert.almostEqual(a, b); //(a < b + 0.0001) && (a > b - 0.0001);
+                    if (a < b) {
+                        this.position.y = b;
+                        a = b;
+                    }
+
+                    return a === b; //(a < b + 0.0001) && (a > b - 0.0001);                    return Assert.almostEqual(a, b); //(a < b + 0.0001) && (a > b - 0.0001);
                 },
                 finish: finishCallback
             });
@@ -105,18 +131,25 @@ define(["Calculations", "Canvas", "Assert"], function (Calculations, Canvas, Ass
 
     Mover.prototype.down = function (options) {
         var tempY = this.position.y,
-            finishCallback = (options && options.finish) ? options.finish : null;
+            finishCallback = (options && options.finish) ? options.finish : null,
+            movementSpeed = Math.ceil(this.settings.movementSpeed);
 
-        if (!Assert.almostEqual(tempY, (Canvas.GRID_SETTINGS.y.height() * (Canvas.GRID_SETTINGS.y.size - 1)))) {
+        if (!Assert.isLarger(tempY, (Canvas.GRID_SETTINGS.y.height() * (Canvas.GRID_SETTINGS.y.size - 1)))) {
             Calculations.add(this, {
                 calculate: function () {
-                    this.position.y += (this.movementSpeed.y / 10);
+                    var distance = movementSpeed * (window.app.canvas.delta || 1);
+                    this.position.y += distance;
                 },
                 doneWhen: function () {
-                    var a = this.position.y,
-                        b = tempY + this.movementSpeed.y;
+                    var a = Math.floor(this.position.y),
+                        b = Math.floor(tempY + this.movementSpeed.y);
 
-                    return Assert.almostEqual(a, b); //(a < b + 0.0001) && (a > b - 0.0001);
+                    if (a > b) {
+                        this.position.y = b;
+                        a = b;
+                    }
+
+                    return a === b; //(a < b + 0.0001) && (a > b - 0.0001);                    return Assert.almostEqual(a, b); //(a < b + 0.0001) && (a > b - 0.0001);
                 },
                 finish: finishCallback
             });
