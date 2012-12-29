@@ -1,6 +1,6 @@
 require.config({
     basePath: "../Scripts",
-    deps: ["Assert"],
+    deps: ["Utilities/Assert"],
     paths: {
         AppSettings: "Settings/AppSettings"
     }
