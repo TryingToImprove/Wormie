@@ -1,23 +1,23 @@
-define(["Worm", "Canvas"], function (Worm, Canvas) {
+define(["AppSettings", "Models/Worm"], function (AppSettings, Worm) {
     "use strict";
 
     function User(name) {
         this.name = name;
-
-
-
-        //this.worm = (!worm) ? new Worm(0, 0) : new Worm(worm.position.x, worm.position.y);
     }
 
     User.prototype.getWorms = function () {
         if (!this.worms) {
-            var worms = [], s = Canvas.GRID_SETTINGS;
+            var worms = [], s = AppSettings.CANVAS;
+
+            var smileys = ["happy", "unhappy"];
 
             for (var i = 0; i < 30; i += 1) {
                 var wormie = new Worm(
-                    s.x.width() * (Math.floor(Math.random() * s.x.size)),
-                    s.y.height() * (Math.floor(Math.random() * s.y.size))
+                    s.xAxis.width() * (Math.floor(Math.random() * s.xAxis.size)),
+                    s.yAxis.height() * (Math.floor(Math.random() * s.yAxis.size))
                 );
+
+                wormie.setState(smileys[Math.floor(Math.random()*smileys.length)]);
 
                 worms.push(wormie);
             }

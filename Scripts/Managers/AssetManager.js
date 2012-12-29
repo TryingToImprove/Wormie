@@ -1,4 +1,4 @@
-define(["Utilities/Promise"], function (Promise) {
+define(["Utilities/Promise", "Vendor/EventManager"], function (Promise, EventManager) {
     "use strict";
 
     var finishLoading;
@@ -9,48 +9,60 @@ define(["Utilities/Promise"], function (Promise) {
 
         this.successCount = 0;
 
-        this.cache = [];
+        this.cache = {};
+        this.loading = {};
+        this.vent = new EventManager(this);
     }
 
     AssetManager.prototype.getFile = function (path) {
         var promise = new Promise(), image, length, file, i, completed = 0, that = this, results = [];
 
-        function loadComplete(path, image) {
-            return function (e) {
-                if (image) {
-                    that.cache[path] = image;
-                }
+        promise.startWith(function () {
+            function loadComplete(path, image) {
+                return function (e) {
+                    if (image) {
+                        that.cache[path] = image;
+                        that.vent.publish("loaded:" + path);
+                    }
 
-                results.push(that.cache[path]);
+                    results.push(that.cache[path]);
 
-                completed += 1;
+                    completed += 1;
 
-                console.log(completed, length, length === completed);
-                if (length === completed) {
-                    promise.resolve.apply(promise, results);
-                }
+                    if (length === completed) {
+                        promise.resolve.apply(promise, results);
+                    }
+                };
             }
-        }
 
-        if (!Array.isArray(path)) {
-            path = [path];
-        }
+            function waitForLoad() {
+                that.vent.unsubscribe("loaded:" + path, waitForLoad);
+                loadComplete(path)();
+            }
 
-        length = path.length;
+            if (!Array.isArray(path)) {
+                path = [path];
+            }
 
-        setTimeout(function () {
+            length = path.length;
+
             for (i = 0; i < length; i += 1) {
                 file = path[file];
 
+
                 if (that.cache[path]) {
-                    loadComplete(path);
+                    loadComplete(path)();
+                } else if (that.loading[path]) {
+                    that.vent.subscribe("loaded:" + path, waitForLoad);
                 } else {
+                    that.loading[path] = true;
+
                     image = new Image();
                     image.addEventListener("load", loadComplete(path, image));
                     image.src = path[i];
                 }
             }
-        }, 0)
+        });
 
         return promise;
     };

@@ -1,5 +1,5 @@
 define(
-    ["Canvas", "User", "Calculations", "Managers/AssetManager", "Factories/UserFactory", "AppSettings", "Drawing/Graphics/WormGraphic"],
+    ["Drawing/Canvas", "User", "Calculations", "Managers/AssetManager", "Factories/UserFactory", "AppSettings", "Drawing/Graphics/WormGraphic"],
     function (Canvas, User, Calculations, AssetManager, UserFactory) {
         "use strict";
 
@@ -28,16 +28,22 @@ define(
                 };
             }(this));
 
-            window.addEventListener("beforeunload", function(){
+            window.addEventListener("beforeunload", function () {
                 //window.app.save();
             }, false);
 
         };
 
         App.prototype.finishLoading = function () {
-            for (var i = 0; i < this.user.worms.length; i++){
-                this.canvas.addDrawing(this.user.worms[i], 0, 0);
-            }
+            var canvas = this.canvas, i, user = this.user;
+
+            require(["Drawing/Graphics/GridGraphic"], function (GridGraphic) {
+                for (i = 0; i < user.worms.length; i += 1) {
+                    canvas.addDrawing(user.worms[i].graphic, 1);
+                }
+
+                canvas.addDrawing(new GridGraphic(), 50);
+            });
 
             drawing(this);
         }

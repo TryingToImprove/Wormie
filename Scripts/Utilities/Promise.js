@@ -10,13 +10,6 @@ define(function () {
         var self = this;
         this.pending = [];
 
-        this.resolve = function () {
-            var args = Array.prototype.slice.call(arguments, 0);
-            args.splice(0, 0, 'resolve');
-
-            self.complete.apply(this, args);
-        };
-
         this.reject = function () {
             var args = Array.prototype.slice.call(arguments, 0);
             args.splice(0, 0, 'reject');
@@ -26,6 +19,17 @@ define(function () {
     }
 
     Promise.prototype = {
+        resolve: function () {
+            var args = Array.prototype.slice.call(arguments, 0);
+            args.splice(0, 0, 'resolve');
+
+            this.complete.apply(this, args);
+        },
+
+        startWith: function (success) {
+            this.startFunc = success;
+        },
+
         then: function (success, failure) {
             this.pending.push({ resolve: success, reject: failure });
             return this;
@@ -40,6 +44,10 @@ define(function () {
             while (this.pending[0]) {
                 this.pending.shift()[type].apply(this, args);
             }
+        },
+
+        run: function () {
+            this.startFunc();
         }
     };
 

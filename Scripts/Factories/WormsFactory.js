@@ -1,4 +1,4 @@
-define(["Worm"], function (Worm) {
+define(["Models/Worm"], function (Worm) {
     "use strict";
 
     function WormsFactory() {
@@ -6,9 +6,12 @@ define(["Worm"], function (Worm) {
     }
 
     WormsFactory.prototype.create = function (worm) {
-        var position = worm.lastPosition;
+        var position = worm.lastPosition,
+            createdWorm = new Worm(position.x, position.y);
 
-        return new Worm(position.x, position.y);
+        createdWorm.setState(worm.state);
+
+        return createdWorm;
     };
 
     WormsFactory.prototype.createMultiple = function (wormsData) {
@@ -19,7 +22,17 @@ define(["Worm"], function (Worm) {
         }
 
         return worms;
-    }
+    };
+
+    WormsFactory.prototype.stringify = function (worms) {
+        var i;
+
+        for (i = 0; i < worms.length; i += 1) {
+            delete worms[i].graphic;
+        }
+
+        return worms;
+    };
 
     return new WormsFactory();
 });

@@ -1,8 +1,7 @@
-define(["Mover", "App", "Canvas"], function (Mover, App, Canvas) {
+define(["AppSettings", "Utilities/Mover", "Drawing/Graphics/WormGraphic"], function (AppSettings, Mover, WormGraphic) {
     "use strict";
 
-
-    function Worm(x, y) {
+    function Worm(x, y) { //implants IDrawable
         this.position = {
             x: x,
             y: y
@@ -14,12 +13,18 @@ define(["Mover", "App", "Canvas"], function (Mover, App, Canvas) {
         };
 
         this.mover = new Mover(this.position, {
-            yHeight: Canvas.GRID_SETTINGS.y.height(window.app.canvas.canvas),
-            xWidth: Canvas.GRID_SETTINGS.x.width(window.app.canvas.canvas)
+            yHeight: AppSettings.CANVAS.yAxis.height(),
+            xWidth: AppSettings.CANVAS.xAxis.width()
         });
+
+        this.graphic = new WormGraphic(this);
 
         this.live();
     }
+
+    Worm.prototype.setState = function(state){
+        this.state = state;
+    };
 
     Worm.prototype.live = function () {
         function doSomething(context) {
@@ -61,13 +66,5 @@ define(["Mover", "App", "Canvas"], function (Mover, App, Canvas) {
         doSomething(this);
     };
 
-    Worm.prototype.draw = function (ctx, rowHeight, colWidth) {
-        ctx.drawImage(window.app.resources.files["/Images/happy.png"], this.position.x, this.position.y, colWidth, rowHeight);
-    };
-
-  /*  Worm.createStandard = function () {
-        return new Worm(0, 0);
-    };
-*/
     return Worm;
 });

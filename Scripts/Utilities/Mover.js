@@ -1,4 +1,4 @@
-define(["Calculations", "Canvas", "Assert"], function (Calculations, Canvas, Assert) {
+define(["AppSettings", "Calculations", "Utilities/Assert"], function (AppSettings, Calculations, Assert) {
     "use strict";
 
     var Mover = function (position, options) {
@@ -37,7 +37,7 @@ define(["Calculations", "Canvas", "Assert"], function (Calculations, Canvas, Ass
             movementSpeed = Math.ceil(this.settings.movementSpeed);
 
         //if (!Assert.isLarger(tempX, (Canvas.GRID_SETTINGS.x.width() * (Canvas.GRID_SETTINGS.x.size - 1)))) {
-        if (Math.floor(tempX + this.movementSpeed.x) <= (Canvas.GRID_SETTINGS.x.width() * (Canvas.GRID_SETTINGS.x.size - 1))) {
+        if (Math.floor(tempX + this.movementSpeed.x) <= (AppSettings.CANVAS.xAxis.width() * (AppSettings.CANVAS.xAxis.size - 1))) {
             Calculations.add(this, {
                 calculate: function () {
                     var distance = movementSpeed * (window.app.canvas.delta || 1);
@@ -146,7 +146,7 @@ define(["Calculations", "Canvas", "Assert"], function (Calculations, Canvas, Ass
             finishCallback = (options && options.finish) ? options.finish : null,
             movementSpeed = Math.ceil(this.settings.movementSpeed);
 
-        if (!Assert.isLarger(tempY, (Canvas.GRID_SETTINGS.y.height() * (Canvas.GRID_SETTINGS.y.size - 1)))) {
+        if (!Assert.isLarger(tempY, (AppSettings.CANVAS.yAxis.height() * (AppSettings.CANVAS.yAxis.size - 1)))) {
             Calculations.add(this, {
                 calculate: function () {
                     var distance = movementSpeed * (window.app.canvas.delta || 1);

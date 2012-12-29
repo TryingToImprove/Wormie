@@ -22,7 +22,7 @@ define(["User", "Factories/WormsFactory"], function (User, WormsFactory) {
         };
 
         userData.name = user.name;
-        userData.worms = user.getWorms();
+        userData.worms = WormsFactory.stringify(user.getWorms());
 
         return userData;
     }
