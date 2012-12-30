@@ -3,7 +3,7 @@
  * Date: 29-12-12
  * Time: 22:14
  */
-define(["App", "View", "Zepto", "text!Templates/Login/LoginView.html"], function (App, View, $, viewTemplate) {
+define(["App", "View", "$", "text!Templates/Login/LoginView.html"], function (App, View, $, viewTemplate) {
     "use strict";
 
     var ItemView = View.extend({

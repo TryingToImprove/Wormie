@@ -1,7 +1,9 @@
 define(
-    ["AppSettings", "Region", "Zepto", "Managers/DataManager", "Drawing/Canvas", "User", "Calculations", "Managers/AssetManager", "Factories/UserFactory", "AppSettings", "Drawing/Graphics/WormGraphic"],
+    ["AppSettings", "Region", "$", "Managers/DataManager", "Drawing/Canvas", "User", "Calculations", "Managers/AssetManager", "Factories/UserFactory", "AppSettings", "Drawing/Graphics/WormGraphic"],
     function (AppSettings, Region, $, DataManager, Canvas, User, Calculations, AssetManager) {
         "use strict";
+
+        console.log($)
 
         var getUser, drawing;
 
@@ -10,6 +12,7 @@ define(
             this.resources = new AssetManager();
             this.dataManager = new DataManager();
             this.vent = AppSettings.vent;
+            this.settings = AppSettings;
 
             this.regions = {
                 main: new Region($("#Wormie"))

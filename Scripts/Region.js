@@ -3,7 +3,7 @@
  * Date: 29-12-12
  * Time: 22:22
  */
-define(["Zepto"], function ($) {
+define(["$"], function ($) {
     "use strict";
 
     function Region(area) {

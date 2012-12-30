@@ -40,6 +40,15 @@ define(function () {
             },
             max: function () {
                 return this.width() * (this.size - 1);
+            },
+            getCol: function (x) {
+                var result = Math.floor((x / this.width()));
+
+                if (result >= (this.size)) {
+                    result = this.size - 1;
+                }
+
+                return result;
             }
         };
 
@@ -61,6 +70,15 @@ define(function () {
             },
             max: function () {
                 return this.height() * (this.size - 1);
+            },
+            getRow: function (y) {
+                var result = Math.floor((y / this.height()));
+
+                if (result >= (this.size)) {
+                    result = this.size - 1;
+                }
+
+                return result;
             }
         };
 

@@ -1,192 +1,85 @@
 define(["AppSettings", "Calculations", "Utilities/Assert"], function (AppSettings, Calculations, Assert) {
     "use strict";
 
-    var Mover = function (owner, options) {
+    var Mover = function (context, movementSpeed) {
+        context.moving = {};
 
-        if (arguments.length === 0) {
-            throw new Error("Parameters are required");
-        }
+        var move = function (axis, length, options) {
+            if (!this.moving[axis]) {
+                var nextPosition = this.position.grid.next[axis] + (length || 1),
+                    direction = (nextPosition > this.position.grid.current[axis]) ? 1 : -1, //increment or decrement
+                    axisData = AppSettings.CANVAS[axis + "Axis"],
+                    max = axisData.max(),
+                    size = axisData.size,
+                    gridPosition = function (pos) {
+                        return axisData.get(pos);
+                    };
 
-        if (!owner) {
-            throw new Error("position is required");
-        }
+                this.position.grid.next[axis] = nextPosition;
+                this.moving[axis] = true;
 
-        if ((!owner.position.x && owner.position.x !== 0) || typeof owner.position.x !== "number") {
-            throw new Error("position.x is not valid");
-        }
+                Calculations.add(this, {
+                    calculate: function () {
+                        var distance = movementSpeed[axis] * (this.scene.getCanvas().delta || 1) * direction;
+                        this.position.real[axis] += distance;
+                    },
+                    doneWhen: function () {
+                        var a = Math.floor(this.position.real[axis]),
+                            b = Math.floor(gridPosition(this.position.grid.next[axis])),
+                            valid = a === b;
 
-        if ((!owner.position.y && owner.position.y !== 0) || typeof owner.position.y !== "number") {
-            throw new Error("position.y is not valid");
-        }
+                        if (a >= max) {
+                            valid = true;
+                            this.position.real[axis] = max;
+                            this.position.grid.next[axis] = size;
+                        } else if (a <= 0) {
+                            valid = true;
+                            this.position.real[axis] = 0;
+                            this.position.grid.next[axis] = 0;
+                        } else {
+                            if (direction < 0) {
+                                if (a < b) {
+                                    valid = true;
+                                    this.position.real[axis] = b;
+                                    a = b;
+                                }
+                            } else {
+                                if (a > b) {
+                                    valid = true;
+                                    this.position.real[axis] = b;
+                                    a = b;
+                                }
+                            }
+                        }
 
-        console.log(owner);
+                        return valid;
+                    },
+                    finish: function () {
+                        this.moving[axis] = false;
+                        this.position.grid.current[axis] = this.position.grid.next[axis];
 
-        //Set parameters on object
-        this.owner = owner;
-        this.position = owner.position;
-        this.settings = {
-            movementSpeed: 80
+                        if (options && options.finish) {
+                            options.finish.call(this);
+                        }
+                    }
+                });
+            }
         };
 
-        this.movementSpeed = {
-            x: options.xWidth,
-            y: options.yHeight
+        return {
+            x: (function (context) {
+                return function (length, options) {
+                    move.call(context, "x", length, options);
+                };
+            }(context)),
+            y: (function (context) {
+                return function (length, options) {
+                    move.call(context, "y", length, options);
+                };
+            }(context))
         };
     };
 
-    Mover.prototype.right = function (options) {
-        var tempX = this.position.x,
-            finishCallback = (options && options.finish) ? options.finish : null,
-            movementSpeed = Math.ceil(this.settings.movementSpeed);
-
-        //if (!Assert.isLarger(tempX, (Canvas.GRID_SETTINGS.x.width() * (Canvas.GRID_SETTINGS.x.size - 1)))) {
-        if (Math.floor(tempX + this.movementSpeed.x) <= (AppSettings.CANVAS.xAxis.width() * (AppSettings.CANVAS.xAxis.size - 1))) {
-            Calculations.add(this, {
-                calculate: function () {
-                    console.log(this.owner)
-                    var distance = movementSpeed * (this.owner.scene.getCanvas().delta || 1);
-                    this.position.x += distance;
-                },
-                doneWhen: function () {
-                    var a = Math.floor(this.position.x),
-                        b = Math.floor(tempX + this.movementSpeed.x),
-                        valid = a === b;
-
-                    if (a > b) {
-                        valid = true;
-                        this.position.x = b;
-                        a = b;
-                    } else if (valid) {
-                        this.position.x = Math.floor(this.position.x);
-                    }
-
-                    return valid;
-                },
-                finish: finishCallback
-            });
-        } else {
-            if (finishCallback) {
-                finishCallback();
-            }
-        }
-    };
-
-    Mover.prototype.left = function (options) {
-        var tempX = this.position.x,
-            finishCallback = (options && options.finish) ? options.finish : null,
-            movementSpeed = Math.ceil(this.settings.movementSpeed);
-
-        if (Math.floor(tempX - this.movementSpeed.x) >= -1) {
-
-            Calculations.add(this, {
-                calculate: function () {
-                    console.log(this.owner.scene)
-                    var distance = movementSpeed * (this.owner.scene.getCanvas().delta || 1);
-                    this.position.x -= distance;
-                },
-                doneWhen: function () {
-                    var a = Math.floor(this.position.x),
-                        b = Math.floor(tempX - this.movementSpeed.x),
-                        valid = a === b;
-
-                    if (a < b) {
-                        valid = true;
-                        this.position.x = b;
-                        a = b;
-                    } else if (valid) {
-                        this.position.x = Math.floor(this.position.x);
-                    }
-
-                    return valid;
-                },
-                finish: finishCallback
-            });
-
-        } else {
-            if (finishCallback) {
-                finishCallback();
-            }
-        }
-    };
-
-    Mover.prototype.up = function (options) {
-        var tempY = this.position.y,
-            finishCallback = (options && options.finish) ? options.finish : null,
-            movementSpeed = Math.ceil(this.settings.movementSpeed);
-
-        if (!Assert.almostEqual(tempY, 0)) {
-
-            Calculations.add(this, {
-                calculate: function () {
-                    console.log(this.owner.scene)
-                    var distance = movementSpeed * (this.owner.scene.getCanvas().delta || 1);
-                    this.position.y -= distance;
-                },
-                doneWhen: function () {
-                    var a = Math.floor(this.position.y),
-                        b = Math.floor(tempY - this.movementSpeed.y),
-                        valid = a === b;
-
-                    if (a < b) {
-                        valid = true;
-                        this.position.y = b;
-                        a = b;
-                    } else if (valid) {
-                        this.position.y = Math.floor(this.position.y);
-                    }
-
-                    return valid;
-                },
-                finish: finishCallback
-            });
-
-        } else {
-            if (finishCallback) {
-                finishCallback();
-            }
-        }
-    };
-
-    Mover.prototype.down = function (options) {
-        var tempY = this.position.y,
-            finishCallback = (options && options.finish) ? options.finish : null,
-            movementSpeed = Math.ceil(this.settings.movementSpeed);
-
-        if (!Assert.isLarger(tempY, (AppSettings.CANVAS.yAxis.height() * (AppSettings.CANVAS.yAxis.size - 1)))) {
-            Calculations.add(this, {
-                calculate: function () {
-                    console.log(this.owner.scene)
-                    var distance = movementSpeed * (this.owner.scene.getCanvas().delta || 1);
-                    this.position.y += distance;
-                },
-                doneWhen: function () {
-                    var a = Math.floor(this.position.y),
-                        b = Math.floor(tempY + this.movementSpeed.y),
-                        valid = a === b;
-
-                    if (a > b) {
-                        valid = true;
-                        this.position.y = b;
-                        a = b;
-                    } else if (valid) {
-                        this.position.y = Math.floor(this.position.y);
-                    }
-
-                    return valid;
-                },
-                finish: finishCallback
-            });
-        } else {
-            if (finishCallback) {
-                finishCallback();
-            }
-        }
-    };
-
-    Mover.prototype.moveTo = function (x, y) {
-        this.position.x = x;
-        this.position.y = y;
-    };
 
     return Mover;
 });

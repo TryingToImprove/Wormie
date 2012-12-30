@@ -3,7 +3,7 @@
  * Date: 29-12-12
  * Time: 21:21
  */
-define(["Handlebars", "Zepto"], function (Handlebars, $) {
+define(["Handlebars", "$"], function (Handlebars, $) {
     "use strict";
 
     function View(options) {

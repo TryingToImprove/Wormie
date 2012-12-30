@@ -6,7 +6,7 @@ define(["Models/Worm"], function (Worm) {
     }
 
     WormsFactory.prototype.create = function (worm) {
-        var position = worm.lastPosition,
+        var position = worm.position,
             createdWorm = new Worm(position.x, position.y);
 
         createdWorm.setState(worm.state);

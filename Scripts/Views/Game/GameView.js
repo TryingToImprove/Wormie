@@ -3,7 +3,7 @@
  * Date: 29-12-12
  * Time: 22:14
  */
-define(["App", "View", "Zepto", "text!Templates/Game/GameView.html", "Drawing/Canvas", "Calculations"], function (App, View, $, viewTemplate, Canvas, Calculations) {
+define(["App", "View", "$", "text!Templates/Game/GameView.html", "Drawing/Canvas", "Calculations"], function (App, View, $, viewTemplate, Canvas, Calculations) {
     "use strict";
 
     var ItemView = View.extend({
@@ -31,7 +31,7 @@ define(["App", "View", "Zepto", "text!Templates/Game/GameView.html", "Drawing/Ca
     });
 
     function drawing(context) {
-        webkitRequestAnimationFrame(function () {
+        window.requestAnimFrame(function () {
 
             Calculations.perform();
 

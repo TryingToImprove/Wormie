@@ -13,9 +13,9 @@ define(["AppSettings", "Factories/WormsFactory"], function (AppSettings, WormFac
 
             for (var i = 0; i < 30; i += 1) {
                 var wormie = WormFactory.create({
-                    lastPosition: {
-                        x:s.xAxis.width() * (Math.floor(Math.random() * s.xAxis.size)),
-                        y:s.yAxis.height() * (Math.floor(Math.random() * s.yAxis.size))
+                    position: {
+                        x: (Math.floor(Math.random() * s.xAxis.size)),
+                        y: (Math.floor(Math.random() * s.yAxis.size))
                     },
                     state: smileys[Math.floor(Math.random()*smileys.length)]
                 });
