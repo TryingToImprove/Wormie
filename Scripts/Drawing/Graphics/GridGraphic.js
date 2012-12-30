@@ -3,14 +3,15 @@
  * Date: 28-12-12
  * Time: 16:44
  */
-define(["AppSettings", "Drawing/Graphic"], function (AppSettings, Graphic) {
+define(["App", "Drawing/Graphic"], function (App, Graphic) {
     "use strict";
 
     var graphic = Graphic.extend("GridGraphic", {
         initialize: function () {
-            AppSettings.vent.subscribe("canvas:click", function (x, y) {
-                var xCol = AppSettings.CANVAS.xAxis.getCol(x),
-                    yRow = AppSettings.CANVAS.yAxis.getRow(y);
+            console.log(App)
+            App.vent.subscribe("canvas:click", function (x, y) {
+                var xCol = App.settings.CANVAS.xAxis.getCol(x),
+                    yRow = App.settings.CANVAS.yAxis.getRow(y);
 
                 this.selected = {
                     x: xCol,
@@ -19,15 +20,20 @@ define(["AppSettings", "Drawing/Graphic"], function (AppSettings, Graphic) {
             }, { context: this });
         },
         draw: function (ctx) {
-            var row, col, rowHeight = AppSettings.CANVAS.yAxis.height(), colWidth = AppSettings.CANVAS.xAxis.width();
+            var row,
+                col,
+                canvasSettings = App.settings.CANVAS,
+                colWidth = canvasSettings.xAxis.width(),
+                rowHeight = canvasSettings.yAxis.height(),
+                rowLength = canvasSettings.yAxis.size,
+                colLength = canvasSettings.xAxis.size,
+                cleanUp = false;
 
             ctx.lineWidth = 1;
             ctx.strokeStyle = "black";
 
-            var cleanUp = false;
-
-            for (row = 0; row < AppSettings.CANVAS.yAxis.size; row += 1) {
-                for (col = 0; col < AppSettings.CANVAS.xAxis.size; col += 1) {
+            for (row = 0; row < rowLength; row += 1) {
+                for (col = 0; col < colLength; col += 1) {
                     if (this.selected) {
                         if (this.selected.x === col && this.selected.y === row) {
                             ctx.strokeStyle = "red";
@@ -49,6 +55,5 @@ define(["AppSettings", "Drawing/Graphic"], function (AppSettings, Graphic) {
         }
     });
 
-
-     return graphic;
+    return graphic;
 });

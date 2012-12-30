@@ -209,16 +209,23 @@ define(function () {
             }
         };
 
-        EventManager.prototype.unsubscribe = function (eventName, eventFunc) {
+        EventManager.prototype.unsubscribe = function (eventName, eventFunc, options) {
             var subEvents = this.getEventContainer(eventName),
                 node = subEvents.events.firstNode,
+                context = (options && options.context) ? options.context : undefined,
                 nodeData;
 
             while (node) {
                 nodeData = node.data;
 
                 if (nodeData.name === eventName && nodeData.func === eventFunc) {
-                    subEvents.events.remove(node);
+                    if (context){
+                        if (nodeData.context === context) {
+                            subEvents.events.remove(node);
+                        }
+                    } else {
+                        subEvents.events.remove(node);
+                    }
                 }
                 node = node.next;
             }

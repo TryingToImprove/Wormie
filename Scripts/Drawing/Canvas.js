@@ -13,8 +13,8 @@ define(["AppSettings", "Drawing/SceneList"], function (AppSettings, SceneList) {
             this.canvas.height = data.CANVAS_HEIGHT;
         }, { context: this });
 
-        this.canvas.addEventListener("mousemove", function (e) {
-            AppSettings.vent.publish("mouseOver", e.offsetX, e.offsetY);
+        this.canvas.addEventListener("click", function (e) {
+            AppSettings.vent.publish("canvas:click", e.offsetX, e.offsetY);
         }, false);
 
         this.updateDelta();

@@ -27,6 +27,15 @@ define(["App", "View", "$", "text!Templates/Game/GameView.html", "Drawing/Canvas
                 drawing(that);
             });
 
+
+            App.vent.subscribe("gameView:worm:click", function (worm) {
+                require(["text!Templates/Game/WormView.html", "Handlebars"], function (template, Handlebars) {
+                    var compiledTemplate = Handlebars.compile(template),
+                        template = compiledTemplate(worm);
+
+                    $(".game-toolbar").html(template);
+                });
+            }, { context: this });
         }
     });
 

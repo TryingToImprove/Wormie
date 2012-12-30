@@ -1,14 +1,11 @@
 define(
-    ["AppSettings", "Region", "$", "Managers/DataManager", "Drawing/Canvas", "User", "Calculations", "Managers/AssetManager", "Factories/UserFactory", "AppSettings", "Drawing/Graphics/WormGraphic"],
-    function (AppSettings, Region, $, DataManager, Canvas, User, Calculations, AssetManager) {
+    ["AppSettings", "Region", "$", "Managers/DataManager", "Drawing/Canvas", "Managers/AssetManager", "AppSettings", "Drawing/Graphics/WormGraphic"],
+    function (AppSettings, Region, $, DataManager, Canvas, AssetManager) {
         "use strict";
-
-        console.log($)
 
         var getUser, drawing;
 
         function App() {
-            //this.canvas = new Canvas(canvas, document.body.offsetWidth, (document.body.offsetHeight / 100) * 90.8);
             this.resources = new AssetManager();
             this.dataManager = new DataManager();
             this.vent = AppSettings.vent;
@@ -18,7 +15,7 @@ define(
                 main: new Region($("#Wormie"))
             };
 
-            this.buildRoutes()
+            this.buildRoutes();
         }
 
         App.prototype.buildRoutes = function () {

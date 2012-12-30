@@ -10,7 +10,11 @@ define(["User", "Factories/WormsFactory"], function (User, WormsFactory) {
 
         user = new User(userData.name);
 
-        user.setWorms(WormsFactory.createMultiple(userData.worms));
+        if (userData.worms) {
+            user.setWorms(WormsFactory.createMultiple(userData.worms, user));
+        } else {
+            user.setWorms(WormsFactory.createRandom(user, 20));
+        }
 
         return user;
     };

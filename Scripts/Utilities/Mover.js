@@ -15,6 +15,12 @@ define(["AppSettings", "Calculations", "Utilities/Assert"], function (AppSetting
                         return axisData.get(pos);
                     };
 
+                if (direction < 0) { //-axis
+                    this.direction[axis] = -1;
+                } else {
+                    this.direction[axis] = 1;
+                }
+
                 this.position.grid.next[axis] = nextPosition;
                 this.moving[axis] = true;
 
@@ -27,6 +33,11 @@ define(["AppSettings", "Calculations", "Utilities/Assert"], function (AppSetting
                         var a = Math.floor(this.position.real[axis]),
                             b = Math.floor(gridPosition(this.position.grid.next[axis])),
                             valid = a === b;
+
+                        //Update current position while moving
+                        if ((direction < 0 && (a < Math.floor(gridPosition(this.position.grid.current[axis])))) || (direction > 0 && (a > Math.floor(gridPosition(this.position.grid.current[axis]))))) {
+                            this.position.grid.current[axis] += direction;
+                        }
 
                         if (a >= max) {
                             valid = true;
@@ -57,6 +68,8 @@ define(["AppSettings", "Calculations", "Utilities/Assert"], function (AppSetting
                     finish: function () {
                         this.moving[axis] = false;
                         this.position.grid.current[axis] = this.position.grid.next[axis];
+
+                        this.direction[axis] = 0;
 
                         if (options && options.finish) {
                             options.finish.call(this);

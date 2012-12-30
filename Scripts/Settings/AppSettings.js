@@ -12,7 +12,10 @@ define(["Vendor/EventManager", "Settings/CanvasSettings"], function (EventManage
 
     AppSettings = window.settings = {
         vent: eventManager,
-        CANVAS: canvasSettings
+        CANVAS: canvasSettings,
+        WORMS: {
+            eatingTime: 10000
+        }
     };
 
     return AppSettings;

@@ -1,37 +1,37 @@
-define(["AppSettings", "Factories/WormsFactory"], function (AppSettings, WormFactory) {
+define(["Factories/WormsFactory"], function (WormFactory) {
     "use strict";
 
+    var App;
+
     function User(name) {
+        App = require("App");
+
         this.name = name;
     }
 
     User.prototype.getWorms = function () {
-        if (!this.worms) {
-            var worms = [], s = AppSettings.CANVAS;
-
-            var smileys = ["happy", "unhappy"];
-
-            for (var i = 0; i < 30; i += 1) {
-                var wormie = WormFactory.create({
-                    position: {
-                        x: (Math.floor(Math.random() * s.xAxis.size)),
-                        y: (Math.floor(Math.random() * s.yAxis.size))
-                    },
-                    state: smileys[Math.floor(Math.random()*smileys.length)]
-                });
-
-                worms.push(wormie);
-            }
-
-            this.setWorms(worms);
-        }
-
         return this.worms;
     };
 
-    User.prototype.setWorms = function(worms){
+    User.prototype.setWorms = function (worms) {
         this.worms = worms;
     };
+
+    User.prototype.wormDied = function (diedWorm) {
+        var worms = this.getWorms(),
+            i, worm,
+            length = worms.length;
+
+        for (i = length - 1; i >= 0; i -= 1) {
+            worm = worms[i];
+
+            if (diedWorm === worm) {
+                worms.splice(i, 1);
+            }
+        }
+
+        this.setWorms(worms);
+    }
 
     return User;
 });

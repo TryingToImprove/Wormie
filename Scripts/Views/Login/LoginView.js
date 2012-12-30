@@ -12,8 +12,8 @@ define(["App", "View", "$", "text!Templates/Login/LoginView.html"], function (Ap
             $("form", this.$area).on("submit", function () {
                 var that = this;
 
-                require(["User"], function (User) {
-                    App.user = new User($("input[name='txtName']", that.$area).val())
+                require(["Factories/UserFactory"], function (UserFactory) {
+                    App.user = UserFactory.create($("input[name='txtName']", that.$area).val());
                     App.save(function () {
                         App.vent.publish("view:show:gameView");
                     });

@@ -30,8 +30,8 @@ define(function () {
             this.startFunc = success;
         },
 
-        then: function (success, failure) {
-            this.pending.push({ resolve: success, reject: failure });
+        then: function (success, context) {
+            this.pending.push({ resolve: success, context: context });
             return this;
         },
 
@@ -42,7 +42,9 @@ define(function () {
             args.splice(0, 1);
 
             while (this.pending[0]) {
-                this.pending.shift()[type].apply(this, args);
+                var func = this.pending.shift();
+
+                func[type].apply(func.context || this, args);
             }
         },
 

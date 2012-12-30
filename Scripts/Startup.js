@@ -1,6 +1,6 @@
 require.config({
     basePath: "../Scripts",
-    deps: ["Utilities/Assert"],
+    deps: ["App", "Utilities/Assert"],
     shim: {
         Handlebars: {
             exports: "Handlebars"
@@ -18,7 +18,7 @@ require.config({
     }
 });
 
-define(["App"], function (App) {
+define(["App", "Handlebars"], function (App, Handlebars) {
     "use strict";
 
     window.requestAnimFrame = (function () {

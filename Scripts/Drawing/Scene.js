@@ -34,8 +34,11 @@ define(function () {
         this.drawables[drawable.graphic.getHashCode()] = drawable;
     };
 
-    Scene.prototype.remove = function (graphic) {
-        delete this.drawables[graphic.getHashCode()];
+    Scene.prototype.remove = function (drawable) {
+        drawable.graphic.dispose();
+
+        delete this.drawables[drawable.graphic.getHashCode()];
+        drawable = undefined;
     };
 
     Scene.prototype.dispose = function () {
