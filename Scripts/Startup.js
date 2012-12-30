@@ -1,16 +1,27 @@
 require.config({
     basePath: "../Scripts",
     deps: ["Utilities/Assert"],
+    shim: {
+        Handlebars: {
+            exports: "Handlebars"
+        },
+        Zepto: {
+            exports: "Zepto"
+        }
+    },
     paths: {
-        AppSettings: "Settings/AppSettings"
+        Handlebars: "Vendor/handlebars-1.0.rc.1",
+        Zepto: "Vendor/Zepto",
+        AppSettings: "Settings/AppSettings",
+        text: "Vendor/requirejs-plugins/text",
+        Templates: "../Templates"
     }
 });
 
 define(["App"], function (App) {
     "use strict";
 
-    var canvas = document.getElementById("game-canvas"), app;
+    window._app = App;
 
-    window.app = app = new App(canvas);
-    app.start();
+    App.start();
 });

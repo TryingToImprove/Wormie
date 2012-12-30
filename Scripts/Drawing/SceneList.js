@@ -3,7 +3,7 @@
  * Date: 29-12-12
  * Time: 17:54
  */
-define(["Utilities/LinkedList"], function (LinkedList) {
+define(["Utilities/LinkedList", "Drawing/Scene"], function (LinkedList, Scene) {
     "use strict";
 
     var SceneList = LinkedList.extend({
@@ -23,11 +23,7 @@ define(["Utilities/LinkedList"], function (LinkedList) {
                 }
             }
 
-            if (!found || !node) {
-                throw new Error("Element was not found");
-            }
-
-            return node.data;
+            return (node) ? node.data : null;
         },
         add: function (depth, scene) {
 
@@ -109,6 +105,12 @@ define(["Utilities/LinkedList"], function (LinkedList) {
                 func.call(context, scene.data);
                 scene = scene.next;
             }
+        },
+        create: function (depth, canvas) {
+            var scene = new Scene(canvas);
+            this.add(depth, scene);
+
+            return scene;
         }
     });
 

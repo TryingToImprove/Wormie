@@ -7,16 +7,18 @@ define(["AppSettings", "Drawing/Graphic", "Utilities/Promise"], function (AppSet
     "use strict";
 
     var graphic = Graphic.extend("WormGraphic", {
-        initialize: function (owner) {
+        initialize: function (owner, position) {
             this.owner = owner;
+            this.position = position;
         },
         draw: function (ctx) {
-            var owner = this.owner;
+            var owner = this.owner,
+                position = this.position;
 
             Graphic.resources.getFile("/Images/" + owner.state + ".png")
                 .then(function (resource) {
                     ctx.drawImage(resource,
-                        owner.position.x, owner.position.y,
+                        position.x, position.y,
                         AppSettings.CANVAS.xAxis.width(), AppSettings.CANVAS.yAxis.height()
                         );
                 })

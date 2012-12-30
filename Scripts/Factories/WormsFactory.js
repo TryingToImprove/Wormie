@@ -25,13 +25,13 @@ define(["Models/Worm"], function (Worm) {
     };
 
     WormsFactory.prototype.stringify = function (worms) {
-        var i;
+        var tempWorms = [], i;
 
         for (i = 0; i < worms.length; i += 1) {
-            delete worms[i].graphic;
+            tempWorms.push(worms[i].toSaveObject());
         }
 
-        return worms;
+        return tempWorms;
     };
 
     return new WormsFactory();

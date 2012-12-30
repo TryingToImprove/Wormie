@@ -1,4 +1,4 @@
-define(["AppSettings", "Models/Worm"], function (AppSettings, Worm) {
+define(["AppSettings", "Factories/WormsFactory"], function (AppSettings, WormFactory) {
     "use strict";
 
     function User(name) {
@@ -12,12 +12,13 @@ define(["AppSettings", "Models/Worm"], function (AppSettings, Worm) {
             var smileys = ["happy", "unhappy"];
 
             for (var i = 0; i < 30; i += 1) {
-                var wormie = new Worm(
-                    s.xAxis.width() * (Math.floor(Math.random() * s.xAxis.size)),
-                    s.yAxis.height() * (Math.floor(Math.random() * s.yAxis.size))
-                );
-
-                wormie.setState(smileys[Math.floor(Math.random()*smileys.length)]);
+                var wormie = WormFactory.create({
+                    lastPosition: {
+                        x:s.xAxis.width() * (Math.floor(Math.random() * s.xAxis.size)),
+                        y:s.yAxis.height() * (Math.floor(Math.random() * s.yAxis.size))
+                    },
+                    state: smileys[Math.floor(Math.random()*smileys.length)]
+                });
 
                 worms.push(wormie);
             }

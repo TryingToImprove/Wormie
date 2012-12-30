@@ -6,8 +6,9 @@
 define(function () {
     "use strict";
 
-    function Scene() {
-        this.graphics = {};
+    function Scene(canvas) {
+        this.setCanvas(canvas);
+        this.drawables = {};
     }
 
     Scene.prototype.setCanvas = function (canvas) {
@@ -21,24 +22,25 @@ define(function () {
     Scene.prototype.render = function (ctx) {
         var prop;
 
-        for (prop in this.graphics) {
-            if (this.graphics.hasOwnProperty(prop)) {
-                this.graphics[prop].draw(ctx);
+        for (prop in this.drawables) {
+            if (this.drawables.hasOwnProperty(prop)) {
+                this.drawables[prop].graphic.draw(ctx);
             }
         }
     };
 
-    Scene.prototype.add = function (graphic) {
-        this.graphics[graphic.getHashCode()] = graphic;
+    Scene.prototype.add = function (drawable) {
+        drawable.scene = this;
+        this.drawables[drawable.graphic.getHashCode()] = drawable;
     };
 
     Scene.prototype.remove = function (graphic) {
-        delete this.graphics[graphic.getHashCode()];
+        delete this.drawables[graphic.getHashCode()];
     };
 
     Scene.prototype.dispose = function () {
         delete this.canvas;
-        delete this.graphics;
+        delete this.drawables;
     };
 
     return Scene;

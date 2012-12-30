@@ -1,26 +1,29 @@
 define(["AppSettings", "Calculations", "Utilities/Assert"], function (AppSettings, Calculations, Assert) {
     "use strict";
 
-    var Mover = function (position, options) {
+    var Mover = function (owner, options) {
 
         if (arguments.length === 0) {
             throw new Error("Parameters are required");
         }
 
-        if (!position) {
+        if (!owner) {
             throw new Error("position is required");
         }
 
-        if ((!position.x && position.x !== 0) || typeof position.x !== "number") {
+        if ((!owner.position.x && owner.position.x !== 0) || typeof owner.position.x !== "number") {
             throw new Error("position.x is not valid");
         }
 
-        if ((!position.y && position.y !== 0) || typeof position.y !== "number") {
+        if ((!owner.position.y && owner.position.y !== 0) || typeof owner.position.y !== "number") {
             throw new Error("position.y is not valid");
         }
 
+        console.log(owner);
+
         //Set parameters on object
-        this.position = position;
+        this.owner = owner;
+        this.position = owner.position;
         this.settings = {
             movementSpeed: 80
         };
@@ -40,7 +43,8 @@ define(["AppSettings", "Calculations", "Utilities/Assert"], function (AppSetting
         if (Math.floor(tempX + this.movementSpeed.x) <= (AppSettings.CANVAS.xAxis.width() * (AppSettings.CANVAS.xAxis.size - 1))) {
             Calculations.add(this, {
                 calculate: function () {
-                    var distance = movementSpeed * (window.app.canvas.delta || 1);
+                    console.log(this.owner)
+                    var distance = movementSpeed * (this.owner.scene.getCanvas().delta || 1);
                     this.position.x += distance;
                 },
                 doneWhen: function () {
@@ -76,7 +80,8 @@ define(["AppSettings", "Calculations", "Utilities/Assert"], function (AppSetting
 
             Calculations.add(this, {
                 calculate: function () {
-                    var distance = movementSpeed * (window.app.canvas.delta || 1);
+                    console.log(this.owner.scene)
+                    var distance = movementSpeed * (this.owner.scene.getCanvas().delta || 1);
                     this.position.x -= distance;
                 },
                 doneWhen: function () {
@@ -113,7 +118,8 @@ define(["AppSettings", "Calculations", "Utilities/Assert"], function (AppSetting
 
             Calculations.add(this, {
                 calculate: function () {
-                    var distance = movementSpeed * (window.app.canvas.delta || 1);
+                    console.log(this.owner.scene)
+                    var distance = movementSpeed * (this.owner.scene.getCanvas().delta || 1);
                     this.position.y -= distance;
                 },
                 doneWhen: function () {
@@ -149,7 +155,8 @@ define(["AppSettings", "Calculations", "Utilities/Assert"], function (AppSetting
         if (!Assert.isLarger(tempY, (AppSettings.CANVAS.yAxis.height() * (AppSettings.CANVAS.yAxis.size - 1)))) {
             Calculations.add(this, {
                 calculate: function () {
-                    var distance = movementSpeed * (window.app.canvas.delta || 1);
+                    console.log(this.owner.scene)
+                    var distance = movementSpeed * (this.owner.scene.getCanvas().delta || 1);
                     this.position.y += distance;
                 },
                 doneWhen: function () {

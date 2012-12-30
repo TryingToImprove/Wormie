@@ -34,6 +34,12 @@ define(function () {
             },
             calculate: function (canvasWidth) {
                 this.cachedWidth =  Math.floor(canvasWidth / this.size);
+            },
+            get: function (pos) {
+                return this.width() * pos;
+            },
+            max: function () {
+                return this.width() * (this.size - 1);
             }
         };
 
@@ -49,6 +55,12 @@ define(function () {
             },
             calculate: function (canvasHeight) {
                 this.cachedHeight =  Math.floor(canvasHeight / this.size);
+            },
+            get: function (pos) {
+                return this.height() * pos;
+            },
+            max: function () {
+                return this.height() * (this.size - 1);
             }
         };
 
